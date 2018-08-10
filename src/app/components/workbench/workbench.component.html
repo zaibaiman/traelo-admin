@@ -17,7 +17,7 @@
             </li>
             <li [ngClass]="{ 'active': activeMenu === 'products' }"
                 (click)="activeMenu = 'products'">
-                <a href="#">
+                <a [routerLink]="['/products']">
                     <i class="icon-store2 position-left"></i> Productos
                 </a>
             </li>
@@ -28,8 +28,8 @@
                 </a>
             </li>
             <li [ngClass]="{ 'active': activeMenu === 'delivery' }"
-                (click)="activeMenu = 'orders'">
-                <a [routerLink]="['/sales']">
+                (click)="activeMenu = 'delivery'">
+                <a [routerLink]="['/deliveries']">
                     <i class="icon-truck position-left"></i> Entregas
                 </a>
             </li>

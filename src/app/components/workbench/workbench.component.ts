@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
     styleUrls: ['./workbench.component.css']
 })
 export class WorkbenchComponent implements OnInit {
-    activeMenu: 'clients' | 'orders' | 'products';
+    activeMenu: 'clients' | 'orders' | 'products' | 'delivery';
 
     constructor() { }
 
