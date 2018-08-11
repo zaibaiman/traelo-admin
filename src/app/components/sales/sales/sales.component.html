@@ -12,22 +12,24 @@
             <table class="table text-nowrap">
                 <thead>
                     <tr>
+                        <th>Id</th>
                         <th>Cliente</th>
                         <th class="col-md-2">Coto</th>
                         <th class="col-md-2">Casa</th>
-                        <th class="col-md-2">Teléfono</th>
+                        <th class="col-md-2">Total</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="cursor-pointer" (click)="onDetailsClick()">
+                    <tr class="cursor-pointer" *ngFor="let order of orders" (click)="onDetailsClick(order)">
+                        <td><span>{{ order.id }}</span></td>
                         <td>
                             <div class="media-left">
-                                <div class=""><span class="text-default text-semibold">Juan Alberto</span></div>
+                                <div class=""><span class="text-default text-semibold">--</span></div>
                             </div>
                         </td>
-                        <td><span>Mayara</span></td>
-                        <td>188</td>
-                        <td><span>(33) 1557 3973</span></td>
+                        <td><span>{{ order.coto }}</span></td>
+                        <td>{{ order.home }}</td>
+                        <td><span class="text-bold text-primary">${{ order.total.toFixed(2) }}</span></td>
                     </tr>
                 </tbody>
             </table>
@@ -55,25 +57,27 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr class="cursor-pointer" *ngFor="let lineOrder of selectedOrder.lineOrders" (click)="markLineOrderAsTaken(lineOrder)">
                                 <td>
                                     <div class="media-left">
-                                        <div class=""><span class="text-default text-semibold">Ruffles Chile 130 g</span></div>
+                                        <div class="">
+                                            <span class="text-default" *ngIf="!lineOrder.markedAsTaken">{{ lineOrder.product.name }}</span>
+                                            <s *ngIf="lineOrder.markedAsTaken"><span class="text-muted">{{ lineOrder.product.name }}</span></s>
+                                        </div>
                                     </div>
                                 </td>
-                                <td><span>$14.00</span></td>
-                                <td>3</td>
-                                <td><span>$42.00</span></td>
-                            </tr>
-                            <tr>
                                 <td>
-                                    <div class="media-left">
-                                        <div class=""><span class="text-default text-semibold">Ruffles Chile 130 g</span></div>
-                                    </div>
+                                    <span *ngIf="!lineOrder.markedAsTaken">${{ lineOrder.price.toFixed(2) }}</span>
+                                    <s *ngIf="lineOrder.markedAsTaken"><span class="text-muted">${{ lineOrder.price.toFixed(2) }}</span></s>
                                 </td>
-                                <td><span>$14.00</span></td>
-                                <td>3</td>
-                                <td><span>$42.00</span></td>
+                                <td>
+                                    <span *ngIf="!lineOrder.markedAsTaken">{{ lineOrder.qty }}</span>
+                                    <s *ngIf="lineOrder.markedAsTaken"><span class="text-muted">{{ lineOrder.qty }}</span></s>
+                                </td>
+                                <td>
+                                    <span *ngIf="!lineOrder.markedAsTaken">${{ (lineOrder.qty * lineOrder.price).toFixed(2) }}</span>
+                                    <s *ngIf="lineOrder.markedAsTaken"><span class="text-muted">${{ (lineOrder.qty * lineOrder.price).toFixed(2) }}</span></s>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -82,7 +86,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary">Entregar</button>
+                <button type="button" class="btn btn-primary" [ngClass]="{ 'disabled': !selectedOrder.allLineOrdersMarkedAsTaken }" (click)="onSelectedOrderDelivery()">Entregar</button>
             </div>
         </div>
     </div>

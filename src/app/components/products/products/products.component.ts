@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import * as firebase from 'firebase';
 import { Product } from '../../../models/product';
+import * as firebase from 'firebase';
 
 declare var $: any;
 

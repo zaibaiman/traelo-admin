@@ -10,8 +10,12 @@ import { ClientsComponent } from './components/contacts/clients/clients.componen
 import { ProductsComponent } from './components/products/products/products.component';
 import { DeliveriesComponent } from './components/deliveries/deliveries/deliveries.component';
 
+import { SalesOrderRepositoryService } from './services/sales-order-repository.service';
+
 import * as firebase from 'firebase';
 import * as firestore from 'firebase/firestore';
+import { DeliveryRepositoryService } from './services/delivery-repository.service';
+
 
 @NgModule({
     declarations: [
@@ -27,7 +31,10 @@ import * as firestore from 'firebase/firestore';
         FormsModule,
         AppRoutingModule
     ],
-    providers: [],
+    providers: [
+        SalesOrderRepositoryService,
+        DeliveryRepositoryService
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule {
