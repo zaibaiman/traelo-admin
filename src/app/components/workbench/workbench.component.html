@@ -25,12 +25,14 @@
                 (click)="activeMenu = 'orders'">
                 <a [routerLink]="['/sales']">
                     <i class="icon-menu7 position-left"></i> Ordenes
+                    <span class="badge bg-warning-400">{{ orderCount }}</span>
                 </a>
             </li>
             <li [ngClass]="{ 'active': activeMenu === 'delivery' }"
                 (click)="activeMenu = 'delivery'">
                 <a [routerLink]="['/deliveries']">
                     <i class="icon-truck position-left"></i> Entregas
+                    <span class="badge bg-warning-400">{{ deliveryCount }}</span>
                 </a>
             </li>
         </ul>
@@ -39,7 +41,7 @@
             <li class="dropdown dropdown-user">
                 <a class="dropdown-toggle" data-toggle="dropdown">
                     <img src="assets/images/demo/users/face11.jpg" alt="">
-                    <span>Victoria</span>
+                    <span>Administrador</span>
                     <i class="caret"></i>
                 </a>
 

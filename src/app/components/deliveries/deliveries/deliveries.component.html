@@ -12,24 +12,24 @@
             <table class="table text-nowrap">
                 <thead>
                     <tr>
-                        <th>Nombre</th>
-                        <th class="col-md-2">Precio Compra</th>
-                        <th class="col-md-2">Precio Venta</th>
-                        <th class="col-md-2">Existencia</th>
-                        <th class="col-md-1">Activo</th>
+                        <th>Id</th>
+                        <th>Cliente</th>
+                        <th class="col-md-2">Coto</th>
+                        <th class="col-md-2">Casa</th>
+                        <th class="col-md-2">Total</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="cursor-pointer" (click)="onDetailsClick()">
+                    <tr class="cursor-pointer" *ngFor="let delivery of deliveries" (click)="onDetailsClick(delivery)">
+                        <td><span>{{ delivery.id }}</span></td>
                         <td>
                             <div class="media-left">
-                                <div class=""><span class="text-default text-semibold">Almendras Dul Cerel 500 g</span></div>
+                                <div class=""><span class="text-default text-semibold">--</span></div>
                             </div>
                         </td>
-                        <td><span>$450.00</span></td>
-                        <td>$500.00</td>
-                        <td><span>15</span></td>
-                        <td><span>No</span></td>
+                        <td><span>{{ delivery.coto }}</span></td>
+                        <td>{{ delivery.home }}</td>
+                        <td><span class="text-bold text-primary">${{ delivery.total.toFixed(2) }}</span></td>
                     </tr>
                 </tbody>
             </table>
@@ -37,21 +37,53 @@
     </div>
 </div>
 
-<div id="details-modal" class="modal fade">
+<div id="order-details-modal" class="modal fade">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h5 class="modal-title">Detalles del Producto</h5>
+                <h5 class="modal-title">Detalles de la Orden</h5>
             </div>
 
             <div class="modal-body">
-
+                <div>
+                    <table class="table text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th class="col-md-2">Precio</th>
+                                <th class="col-md-2">Qty</th>
+                                <th class="col-md-2">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let lineOrder of selectedDelivery.lineOrders">
+                                <td>
+                                    <div class="media-left">
+                                        <div class="">
+                                            <span class="text-default">{{ lineOrder.product.name }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span>${{ lineOrder.price.toFixed(2) }}</span>
+                                </td>
+                                <td>
+                                    <span>{{ lineOrder.qty }}</span>
+                                </td>
+                                <td>
+                                    <span>${{ (lineOrder.qty * lineOrder.price).toFixed(2) }}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary">Entregar</button>
+                <button type="button" class="btn btn-default" (click)="onCancelledOrderClick()">Orden Cancelada</button>
+                <button type="button" class="btn btn-primary" (click)="onDeliveriedOrderClick()">Orden Entregada</button>
             </div>
         </div>
     </div>
