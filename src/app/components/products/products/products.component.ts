@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Product } from '../../../models/product';
+import { ProductsRepositoryService, ProductEvent } from '../../../services/products-repository.service';
 import * as firebase from 'firebase';
 
 declare var $: any;
@@ -11,32 +12,71 @@ declare var $: any;
 })
 export class ProductsComponent implements OnInit {
     products: Product[] = [];
+    productsFiltered: Product[] = [];
+    selectedProduct: Product;
+    searchValue: string;
+
     private db = firebase.firestore();
 
-    constructor() { }
+    constructor(private productsRepository: ProductsRepositoryService) { }
 
     ngOnInit() {
-        this.loadProducts();
+        this.productsRepository.on().subscribe(event => {
+            this.handleProductEvent(event);
+        });
+        this.productsFiltered = this.products;
     }
 
-    onDetailsClick() {
+    onDetailsClick(product: Product) {
+        this.selectedProduct = product;
         $('#details-modal').modal('show');
     }
 
-    private async loadProducts() {
-        let productsSnapshot = await this.db.collection('products').limit(30).get();
-        productsSnapshot.forEach(snapshot => {
-            const data = snapshot.data();
-            this.products.push({
-                id: data.id,
-                name: data.shortDescription,
-                salePrice: data.price,
-                costPrice: 0,
-                description: null,
-                qty: 10,
-                active: true,
-                imageUrl: null
-            });
+    onSaveChangesClick() {
+        this.saveChanges().then(_ => {
+            $('#details-modal').modal('hide');
         });
+    }
+
+    onPublishChangesClick() {
+
+    }
+
+    onSearchChange(value: string) {
+        this.filterProducts(value);
+    }
+
+    private handleProductEvent(event: ProductEvent) {
+        if (event.type === 'added') {
+            this.products.push(event.product);
+        } else if (event.type === 'removed') {
+        }
+    }
+
+    private async saveChanges() {
+        await this.db.collection('products').doc(this.selectedProduct.id).update({
+            shortDescription: this.selectedProduct.name,
+            longDescription: this.selectedProduct.description || null,
+            price: this.selectedProduct.salePrice || 0,
+            costPrice: this.selectedProduct.costPrice || 0,
+            qty: this.selectedProduct.qty || 0,
+            active: this.selectedProduct.active || false
+        });
+        const newDocRef = this.db.collection('settings').doc();
+        await this.db.collection('settings').doc('web').update({
+            productsVersion: newDocRef.id
+        });
+    }
+
+    private async publishChanges() {
+
+    }
+
+    private filterProducts(search: string) {
+        if (search === null || search === '') {
+            this.productsFiltered = this.products;
+        } else {
+            this.productsFiltered = this.products.filter(x => x.name.toLowerCase().indexOf(search.toLowerCase()) != -1);
+        }
     }
 }

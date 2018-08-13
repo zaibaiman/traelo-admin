@@ -1,5 +1,6 @@
 export class SalesOrder {
     id: string;
+    createdAt: Date;
     coto: string;
     home: string;
     total: number;

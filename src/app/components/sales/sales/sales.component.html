@@ -15,21 +15,23 @@
                         <th>Id</th>
                         <th>Cliente</th>
                         <th class="col-md-2">Coto</th>
-                        <th class="col-md-2">Casa</th>
+                        <th class="col-md-1">Casa</th>
                         <th class="col-md-2">Total</th>
+                        <th class="col-md-2">Solicitado</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="cursor-pointer" *ngFor="let order of orders" (click)="onDetailsClick(order)">
-                        <td><span>{{ order.id }}</span></td>
+                    <tr class="cursor-pointer" *ngFor="let orderVm of orderVms" (click)="onDetailsClick(orderVm)">
+                        <td><span>{{ orderVm.order.id }}</span></td>
                         <td>
                             <div class="media-left">
                                 <div class=""><span class="text-default text-semibold">--</span></div>
                             </div>
                         </td>
-                        <td><span>{{ order.coto }}</span></td>
-                        <td>{{ order.home }}</td>
-                        <td><span class="text-bold text-primary">${{ order.total.toFixed(2) }}</span></td>
+                        <td><span>{{ orderVm.order.coto }}</span></td>
+                        <td>{{ orderVm.order.home }}</td>
+                        <td><span class="text-bold text-primary">${{ orderVm.order.total.toFixed(2) }}</span></td>
+                        <td><span class="text-bold" [ngClass]="{ 'text-primary': orderVm.createdAtMinutes < 15, 'text-danger': orderVm.createdAtMinutes>= 15 }">Hace {{ orderVm.createdAtMinutes }} minutos</span></td>
                     </tr>
                 </tbody>
             </table>
@@ -39,7 +41,7 @@
 
 <div id="order-details-modal" class="modal fade">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+        <div class="modal-content" *ngIf="selectedOrderVm != null">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h5 class="modal-title">Detalles de la Orden</h5>
@@ -57,7 +59,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="cursor-pointer" *ngFor="let lineOrder of selectedOrder.lineOrders" (click)="markLineOrderAsTaken(lineOrder)">
+                            <tr class="cursor-pointer" *ngFor="let lineOrder of selectedOrderVm.order.lineOrders" (click)="markLineOrderAsTaken(lineOrder)">
                                 <td>
                                     <div class="media-left">
                                         <div class="">
@@ -86,7 +88,8 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" [ngClass]="{ 'disabled': !selectedOrder.allLineOrdersMarkedAsTaken }" (click)="onSelectedOrderDelivery()">Entregar</button>
+                <button type="button" class="btn btn-default" (click)="onSelectedOrderCancel()">Cancelar Orden</button>
+                <button type="button" class="btn btn-primary" [ngClass]="{ 'disabled': !selectedOrderVm.allLineOrdersMarkedAsTaken }" (click)="onSelectedOrderDelivery()">Entregar</button>
             </div>
         </div>
     </div>

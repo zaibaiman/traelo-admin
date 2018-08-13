@@ -58,6 +58,7 @@ export class SalesOrderRepositoryService {
         const data = doc.data();
         const salesOrder = new SalesOrder();
         salesOrder.id = doc.id;
+        salesOrder.createdAt = data.createdAt && new Date(data.createdAt) || null;
         salesOrder.coto = data.coto;
         salesOrder.home = data.home;
         salesOrder.total = data.total;

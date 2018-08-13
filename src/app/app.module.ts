@@ -11,10 +11,11 @@ import { ProductsComponent } from './components/products/products/products.compo
 import { DeliveriesComponent } from './components/deliveries/deliveries/deliveries.component';
 
 import { SalesOrderRepositoryService } from './services/sales-order-repository.service';
+import { DeliveryRepositoryService } from './services/delivery-repository.service';
+import { ProductsRepositoryService } from './services/products-repository.service';
 
 import * as firebase from 'firebase';
 import * as firestore from 'firebase/firestore';
-import { DeliveryRepositoryService } from './services/delivery-repository.service';
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import { DeliveryRepositoryService } from './services/delivery-repository.servic
     ],
     providers: [
         SalesOrderRepositoryService,
-        DeliveryRepositoryService
+        DeliveryRepositoryService,
+        ProductsRepositoryService
     ],
     bootstrap: [AppComponent]
 })

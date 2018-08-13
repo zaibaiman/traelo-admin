@@ -2,11 +2,32 @@
     <div class="page-header-content">
         <div class="page-title">
             <h4><i class="icon-store2 position-left"></i> <span class="text-semibold">Productos</span></h4>
+            <div class="heading-elements">
+                <button type="button" class="btn btn-default heading-btn">Publicar Cambios</button>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="content">
+    <div class="panel panel-flat">
+        <div class="panel-body no-padding-bottom">
+            <div class="main-search">
+                <div class="input-group content-group">
+                    <div class="has-feedback has-feedback-left">
+                        <input #search type="text" class="form-control input-xlg" (change)="onSearchChange(search.value)">
+                        <div class="form-control-feedback">
+                            <i class="icon-search4 text-muted text-size-base"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-primary btn-xlg">Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="panel panel-flat">
         <div>
             <table class="table text-nowrap">
@@ -20,7 +41,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="cursor-pointer" (click)="onDetailsClick()" *ngFor="let product of products">
+                    <tr class="cursor-pointer" (click)="onDetailsClick(product)" *ngFor="let product of productsFiltered">
                         <td>
                             <div class="media-left">
                                 <div class=""><span class="text-default text-semibold">{{ product.name }}</span></div>
@@ -28,8 +49,8 @@
                         </td>
                         <td><span>${{ product.costPrice.toFixed(2) }}</span></td>
                         <td>${{ product.salePrice.toFixed(2) }}</td>
-                        <td><span>15</span></td>
-                        <td><span>No</span></td>
+                        <td><span>{{ product.qty }}</span></td>
+                        <td><span>{{ product.active ? 'Si' : 'No' }}</span></td>
                     </tr>
                 </tbody>
             </table>
@@ -42,16 +63,59 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h5 class="modal-title">Detalles del Producto</h5>
+                <h5 class="modal-title">Detalle del Producto</h5>
             </div>
 
             <div class="modal-body">
+                <div class="form-horizontal" *ngIf="selectedProduct != null">
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Descripción Corta</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" [ngModel]="selectedProduct.name">
+                        </div>
+                    </div>
 
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Descripción Larga</label>
+                        <div class="col-sm-9">
+                            <textarea rows="3" cols="5" class="form-control" [(ngModel)]="selectedProduct.description"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Precios Compra/Venta</label>
+                        <div class="col-sm-9">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <input type="text" placeholder="Precio de Compra" class="form-control" [(ngModel)]="selectedProduct.costPrice">
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <input type="text" placeholder="Precio de Venta" class="form-control" [(ngModel)]="selectedProduct.salePrice">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Existencia</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" [(ngModel)]="selectedProduct.qty">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Activo</label>
+                        <div class="col-sm-9">
+                            <input type="checkbox" [(ngModel)]="selectedProduct.active">
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary">Entregar</button>
+                <button type="button" class="btn btn-primary" (click)="onSaveChangesClick()">Guardar</button>
             </div>
         </div>
     </div>
